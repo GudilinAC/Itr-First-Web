@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Web.Models.ApplicationUser>
+<script src="~/Scripts/jquery-3.3.1.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" ; integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+<link rel="stylesheet" href="/wp-content/themes/MyTheme/bootstrap/css/bootstrap.min.css" type="text/css" media="screen, projection" />
+<form name="MainForm" method="post">
+ 
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">            
+            <button type="submit" class="btn btn-lg btn-dark fas fa-lock" id="lock" formaction="@Url.Action("LockUser", "Account")"></button>
+            <button type="submit" class="btn btn-lg btn-dark fas fa-unlock" id="unlock" formaction="@Url.Action("UnlockUser", "Account")"></button>
+            <button type="submit" class="btn btn-lg btn-dark fas fa-trash" id="trash" formaction="@Url.Action("DeleteUser", "Account")"></button>
+        </div>
+    </div>
+
+    <table class="table" style="border-width: 2px">
+        <tr>
+            <th>
+                <input type="checkbox" class="checkbox" id="checkBoxAll">
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                <strong>Blocked</strong>
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <input type="checkbox" class="checkbox user" value="@item.Id" name="userId" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    <input type="checkbox" class="checkbox" checked="@(!item.LockoutEnabled)" disabled />
+                </td>
+            </tr>
+        }
+    </table>
+
+    <div id="showGoods"><b>Отмечено флажков: <span style="color:green;" id="goodsLenght"></span></b></div>
+</form>
+
+<script type="text/javascript">
+    $('.document').ready(function () {
+        $("#trash").attr("disabled", true);
+        $("#lock").attr("disabled", true);
+        $("#unlock").attr("disabled", true);
+
+
+        $('#checkBoxAll').click(function () {
+            if ($(this).is(":checked"))
+                $('.checkbox').prop('checked', true);
+            else
+                $('.checkbox').prop('checked', false);
+        });
+
+
+        $('.checkbox').on('click', function () {
+            var count = $('.user:checkbox:checked').length;
+
+            $("#goodsLenght").text(count);
+            if (count == 0) {
+                $("#trash").attr("disabled", true);
+                $("#lock").attr("disabled", true);
+                $("#unlock").attr("disabled", true);
+            }
+            else {
+                $("#trash").attr("disabled", false);
+                $("#lock").attr("disabled", false);
+                $("#unlock").attr("disabled", false);
+            }
+
+
+        });
+    });
+</script>
+
